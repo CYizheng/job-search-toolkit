@@ -15,7 +15,11 @@
 
   var state = {
     stream: null,
-    modeId: 'standard',
+    modeId: (function () {
+      // 跟随题库：默认选中 modes 里的第一个。换题库后不需要改这里。
+      var M = (window.INTERVIEW && window.INTERVIEW.modes) || {};
+      return Object.keys(M)[0] || null;
+    })(),
     prepSec: 10,
     queue: [],
     index: 0,
@@ -224,6 +228,11 @@
   /* ---------- 面试流程 ---------- */
   els.btnStart.addEventListener('click', function () {
     buildQueue();
+    // 题库被替换后若套件 key 不匹配，队列会是空的——明确报错，不要进一个空白考场
+    if (!state.queue.length) {
+      showToast('当前套件没抽到题目：请确认 questions.js 的 modes 键与 app.js 一致', 5000);
+      return;
+    }
     els.setup.style.display = 'none';
     els.stage.classList.add('on');
     els.selfView.style.display = 'block';

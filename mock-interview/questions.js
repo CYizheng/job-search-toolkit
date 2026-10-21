@@ -25,11 +25,12 @@ window.INTERVIEW = {
   "analysis": {
    "label": "② 分析方法论（随机 3 题）",
    "tracks": [
-    "analysis"
+    "analysis",
+    "sql"
    ],
    "pick": 3,
    "chainDepth": 3,
-   "desc": "从 8 条方法论链里随机抽 3 条，每条往下追 3 层。"
+   "desc": "从方法论与 SQL 链里随机抽 3 条，每条往下追 3 层。"
   },
   "project": {
    "label": "③ 项目深挖（随机 2 题）",

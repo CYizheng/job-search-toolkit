@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>job-search-toolkit · 求职工具集</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #1F1F1F; background: #FBFCFE; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 64px 24px 80px; }
+  header { border-bottom: 2px solid #1F4E79; padding-bottom: 20px; margin-bottom: 40px; }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.3px; }
+  .kicker { font-size: 13px; color: #185FA5; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .lede { font-size: 15px; color: #4A4A4A; margin: 0; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 680px) { .cards { grid-template-columns: 1fr; } .wrap { padding: 40px 18px 60px; } }
+  .card {
+    border: 1px solid #DCE4EE; border-radius: 12px; background: #FFFFFF;
+    padding: 24px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 17px; font-weight: 600; margin: 0 0 4px; color: #0C447C; }
+  .card .tag { font-size: 11px; color: #666; background: #F1F5FA; border-radius: 4px;
+    padding: 2px 8px; display: inline-block; margin-bottom: 12px; }
+  .card p { font-size: 13.5px; color: #444; margin: 0 0 14px; }
+  .card ul { font-size: 13px; color: #555; margin: 0 0 20px; padding-left: 18px; }
+  .card li { margin-bottom: 4px; }
+  .btn {
+    display: inline-block; margin-top: auto; padding: 9px 18px; border-radius: 6px;
+    background: #185FA5; color: #fff; text-decoration: none; font-size: 13.5px; font-weight: 500;
+    align-self: flex-start;
+  }
+  .btn:hover { background: #0C447C; }
+  .btn.off { background: #EDEFF3; color: #6B6B6B; cursor: default; }
+  .btn.off:hover { background: #EDEFF3; }
+  section { margin-top: 52px; }
+  h3 { font-size: 15px; font-weight: 600; color: #1F4E79; margin: 0 0 12px;
+       border-left: 3px solid #1F4E79; padding-left: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #E8EDF3; vertical-align: top; }
+  th { background: #F5F8FC; font-weight: 600; color: #0C447C; }
+  code { font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 12.5px;
+    background: #F2F4F7; padding: 1px 5px; border-radius: 3px; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid #E8EDF3;
+    font-size: 12px; color: #888; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">求职工具集 · 零外部依赖</div>
+  <h1>job-search-toolkit</h1>
+  <p class="lede">两个自己天天在用的求职工具：一个练面试，一个管投递。都刻意不引入任何第三方依赖。</p>
+</header>
+
+<div class="cards">
+
+  <div class="card">
+    <h2>模拟面试引擎</h2>
+    <div class="tag">原生 JS · 零依赖 · 纯前端</div>
+    <p>题库驱动的面试练习器。核心是<strong>链式追问</strong>：一道主问题后面挂 2–4 层递进追问，逼你在同一个点上连扛三层。</p>
+    <ul>
+      <li>5 种模式：热身 / 方法论 / 项目深挖 / 行为面 / 全流程</li>
+      <li>题库是一个普通 JS 对象，换题库不改代码</li>
+      <li>录音只留在本地，不上传任何服务器</li>
+    </ul>
+    <a class="btn" href="mock-interview/">开始练习 →</a>
+  </div>
+
+  <div class="card">
+    <h2>投递台账</h2>
+    <div class="tag">Python 纯标准库 · SQLite 单文件</div>
+    <p>命令行管理投递记录，带本地网页看板。300+ 条记录仍是秒开，因为整个存储就是一个 SQLite 文件。</p>
+    <ul>
+      <li><code>add / ls / set / note / doctor</code> 六个命令覆盖全流程</li>
+      <li>21 列记录 + 事件流，状态变更可追溯</li>
+      <li>附 148 项中文网申表单字段骨架</li>
+    </ul>
+    <span class="btn off">需本地运行，见仓库说明</span>
+  </div>
+
+</div>
+
+<section>
+  <h3>为什么是零依赖</h3>
+  <p style="font-size:13.5px;color:#444;margin:0 0 14px;">
+    这两类工具的生命周期通常只有几个月。装依赖的摩擦——venv、pip 源、版本冲突——比功能本身更容易让人放弃。
+    所以台账只用 <code>argparse / json / sqlite3 / http.server</code>；面试器只用浏览器原生 API，
+    连构建步骤都没有，改完刷新即可。
+  </p>
+</section>
+
+<section>
+  <h3>仓库里没有真实数据</h3>
+  <table>
+    <thead><tr><th>内容</th><th>处置</th></tr></thead>
+    <tbody>
+      <tr><td>真实投递记录</td><td>换成 10 条虚构示例</td></tr>
+      <tr><td>个人信息（姓名 / 手机 / 身份证 / 家庭）</td><td>全部清空，只保留字段名</td></tr>
+      <tr><td>邮箱授权码</td><td>从未入库，<code>.gitignore</code> 显式排除</td></tr>
+      <tr><td>面试录音与逐字稿</td><td>未包含</td></tr>
+      <tr><td>个人化题库</td><td>换成通用示例题库</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  MIT License · 示例数据均为虚构，如有雷同纯属巧合
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 模拟面试 · 纯录音 + 链式追问</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div>
+      <h1>AI 模拟面试 · 纯录音版</h1>
+      <div class="sub" id="headerSub">候选人：示例 ｜ 准备 → 作答（可限时 / 可不限时）→ 自动下一题</div>
+    </div>
+    <div class="tag">只录音 · 不录像 · 跑完自动出体检报告</div>
+  </header>
+
+  <main>
+    <!-- 准备区 -->
+    <section id="setup" class="card">
+      <h2><span class="badge">设备</span>开启麦克风</h2>
+      <div class="setup-grid">
+        <div class="preview-box">
+          <canvas id="preview" width="320" height="180"></canvas>
+          <div class="cam-status" id="camStatus">麦克风未开启</div>
+        </div>
+        <div>
+          <div class="field">
+            <label>第一步 · 打开麦克风（浏览器会弹授权框，请点允许）</label>
+            <button class="btn btn-primary" id="btnOpenCam">🎤 开启麦克风</button>
+          </div>
+          <div class="field">
+            <label>第二步 · 选择模拟套件（<b>每次点开始都会重新随机抽题</b>）</label>
+            <div class="radio-row" id="modeRow"></div>
+            <div class="tips" id="modeDesc" style="margin-top:8px"></div>
+          </div>
+          <div class="field">
+            <label>第三步 · 节奏（准备时间）</label>
+            <div class="radio-row" id="prepRow">
+              <label class="sel"><input type="radio" name="prep" value="10" checked> 准备 10 秒</label>
+              <label><input type="radio" name="prep" value="30"> 准备 30 秒</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>第四步 · 模拟选项</label>
+            <div class="switch-row">
+              <span>作答不限时（讲完自己点"完成本题"，90/150 秒只在页面提醒不打断）</span>
+              <span class="switch"><input type="checkbox" id="optNoLimit" checked><span class="slider"></span></span>
+            </div>
+            <div class="switch-row">
+              <span>链式追问（按套件往下追 0–5 层；深度显示在题号旁）</span>
+              <span class="switch"><input type="checkbox" id="optChain" checked><span class="slider"></span></span>
+            </div>
+            <div class="switch-row">
+              <span>语音播题（AI 数字人读题）</span>
+              <span class="switch"><input type="checkbox" id="optTTS" checked><span class="slider"></span></span>
+            </div>
+            <div class="switch-row">
+              <span>准备阶段显示关键词提示（作答时自动收起）</span>
+              <span class="switch"><input type="checkbox" id="optHint" checked><span class="slider"></span></span>
+            </div>
+          </div>
+          <button class="btn btn-ok" id="btnStart" disabled style="width:100%">开始模拟面试</button>
+          <div class="tips">
+            <b>题库：</b>600 问 —— 三篇材料追问链 319 ＋ 专业概念 200 ＋ 面经手写 40 ＋ 行为面 41；
+            组装成 <b>319 道主问题 ＋ 281 层递进追问</b>、共 <b>10 套模式</b>。<br><br>
+            <b>标准场已调浅（2026-10-11）：</b>只追 2 层——第 3 层往后是审稿人层（AUC、基线对比、口径细节），
+            真实面试官很少问到。想被挖到那层请单独跑 <b>⑩ 论文深挖场</b>。<br><br>
+            <b>面试纪律：</b><br>
+            ① 正式面试是看着镜头的，桌上别放稿子、要求自己口述；<br>
+            ② 页面会检测切屏 / 失焦并记录，正式 AI 面切屏会被判定违规；<br>
+            ③ 每题回答<b>只录声音</b>，存到本机 <b>recordings/</b>；<br>
+            ④ 全场跑完，到文件夹里双击 <b>run_analyze.bat</b>，自动转写 + 出体检报告；<br>
+            ⑤ 提示只在准备阶段给你看关键词，作答开始会自动收起。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 面试区 -->
+    <section id="stage" class="stage">
+      <div class="topbar">
+        <span class="q-pos" id="qPos">第 1 / 10 题</span>
+        <span class="muted" id="modeLabel"></span>
+      </div>
+      <div class="card" style="padding:20px 24px">
+        <div class="timer-box">
+          <div class="phase" id="phaseLabel">准备中…</div>
+          <div class="timer" id="timer">10</div>
+        </div>
+        <div class="q-card">
+          <div class="q-type" id="qType">简历深挖</div>
+          <div class="q-text" id="qText">问题加载中…</div>
+        </div>
+        <details class="hint-box" id="hintBox">
+          <summary>💡 答题要点（关键词，不要照念）</summary>
+          <div class="hint-body" id="hintBody"></div>
+        </details>
+        <div class="hint-box" id="checkPanel" style="display:none">
+          <div style="font-size:13px;color:var(--jd-red);font-weight:700;margin-bottom:6px">✅ 本题结束 · 必覆盖要点自查</div>
+          <div class="hint-body" id="checkBody"></div>
+        </div>
+        <div class="live-metrics" id="liveMetrics">
+          <span id="liveDur">时长 00:00</span>
+          <span id="liveLevel">音量 —</span>
+        </div>
+        <div class="controls">
+          <button class="btn btn-ghost" id="btnReplay" title="重新用语音播一遍题目">🔊 重播题目</button>
+          <button class="btn btn-ghost" id="btnStopSeg" style="display:none">✅ 本题作答完成，下一题</button>
+          <button class="btn btn-ghost" id="btnAbort">✖ 终止整场面试</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>🎙️ 已录制的回答片段（音频）</h2>
+        <div class="seg-list" id="segList"><div class="muted">还没有录制片段</div></div>
+      </div>
+    </section>
+
+    <!-- 结果区 -->
+    <section id="result" class="card" style="display:none">
+      <div id="resultDyn"></div>
+      <h2 style="margin-top:22px">📋 跑完必做的三件事</h2>
+      <ul class="checklist">
+        <li>双击文件夹里的 <b>run_analyze.bat</b> —— 自动转写并生成体检报告</li>
+        <li>打开 <b>analysis_report.md</b>：先看「时长体检」和「数字口径」，这两项最致命</li>
+        <li>回听时长超标或不足的那些段，只改那几段</li>
+      </ul>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap">
+        <button class="btn btn-primary" id="btnAgain">🔄 再来一轮</button>
+        <button class="btn btn-ghost" id="btnReport">📊 怎么出报告？</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 录音状态小窗 -->
+  <div class="self-view" id="selfView" style="display:none">
+    <div class="eye-hint">🔴 正在录音</div>
+  </div>
+
+  <div class="toast" id="toast"><div class="toast-inner" id="toastMsg"></div></div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

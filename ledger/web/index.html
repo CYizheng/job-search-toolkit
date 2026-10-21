@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>秋招投递记录</title>
+<style>
+:root{
+  --bg:#FBFAF7; --card:#fff; --bd:#E3E1DA; --bd2:#EFEDE6;
+  --tx:#2C2C2A; --mu:#6B6A64; --mu2:#9A9890;
+  --blue-bg:#E6F1FB; --blue:#185FA5; --blue-d:#0C447C;
+  --amber-bg:#FAEEDA; --amber:#854F0B;
+  --purple-bg:#EEEDFE; --purple:#534AB7;
+  --teal-bg:#E1F5EE; --teal:#0F6E56;
+  --green-bg:#EAF3DE; --green:#3B6D11;
+  --red-bg:#FCEBEB; --red:#A32D2D;
+  --gray-bg:#F1EFE8; --gray:#5F5E5A;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding:20px 22px 60px}
+h1{font-size:19px;font-weight:500;margin:0}
+.top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.top .path{color:var(--mu2);font-size:12px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:10px;
+  padding:7px 13px;text-align:center;min-width:74px}
+.stat b{display:block;font-size:19px;font-weight:500;line-height:1.25}
+.stat span{color:var(--mu);font-size:12px}
+.stat.hi b{color:var(--amber)}
+
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:12px;
+  padding:14px 16px;margin-bottom:14px}
+.panel h2{font-size:13px;font-weight:500;color:var(--mu);margin:0 0 10px}
+
+form.quick{display:grid;gap:8px;
+  grid-template-columns:1.3fr 1.3fr .8fr .8fr .7fr .9fr .9fr auto;align-items:end}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f label{font-size:11px;color:var(--mu2)}
+.f .req{color:var(--amber)}
+input,select,textarea{font:inherit;font-size:13px;color:var(--tx);
+  background:#fff;border:1px solid var(--bd);border-radius:7px;padding:6px 9px;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);
+  box-shadow:0 0 0 2px rgba(24,95,165,.1)}
+input::placeholder{color:#B8B6AE}
+button{font:inherit;font-size:13px;padding:7px 14px;border-radius:7px;cursor:pointer;
+  border:1px solid var(--bd);background:#fff;color:var(--tx);white-space:nowrap}
+button:hover{background:#F7F6F2}
+button.primary{background:var(--blue-d);color:#fff;border-color:var(--blue-d)}
+button.primary:hover{background:#0A3A66}
+button.sm{padding:3px 9px;font-size:12px}
+button.link{border:none;background:none;color:var(--mu);padding:3px 5px;font-size:12px}
+button.link:hover{color:var(--tx);background:none;text-decoration:underline}
+button.danger{color:var(--red)}
+.hint{font-size:12px;color:var(--mu);margin-top:8px;min-height:0}
+.hint b{color:var(--amber);font-weight:500}
+.warnbox{background:var(--amber-bg);border:1px solid #F0DCB4;border-radius:8px;
+  padding:8px 11px;font-size:12px;color:var(--amber);margin-top:9px}
+.infobox{background:var(--blue-bg);border:1px solid #C9E0F5;border-radius:8px;
+  padding:8px 11px;font-size:12px;color:var(--blue-d);margin-top:9px}
+.okbox{background:var(--teal-bg);border:1px solid #B7E3D4;border-radius:8px;
+  padding:8px 11px;font-size:12px;color:var(--teal);margin-top:9px}
+
+.bulkwrap{margin-top:12px}
+textarea{min-height:120px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;
+  line-height:1.65;resize:vertical}
+
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input[type=search]{max-width:250px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:4px 11px;border-radius:20px;border:1px solid var(--bd);background:#fff;
+  font-size:12px;cursor:pointer;color:var(--mu)}
+.chip:hover{background:#F7F6F2}
+.chip.on{background:var(--gray-bg);border-color:var(--bd2);color:var(--tx);font-weight:500}
+
+.alert{border-color:#F0DCB4;background:#FFFCF6}
+.alert ul{margin:0;padding:0;list-style:none}
+.alert li{display:flex;gap:10px;align-items:baseline;padding:5px 0;
+  border-bottom:1px solid #F5EEDF;font-size:13px}
+.alert li:last-child{border-bottom:none}
+.alert .tag{flex:none;width:76px;font-weight:500;font-size:12px}
+.alert .tag.over{color:var(--red)}
+.alert .tag.soon{color:var(--amber)}
+.alert .tag.later{color:var(--mu)}
+.alert .co{color:var(--mu)}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;padding:8px 10px;background:#FAF9F6;color:var(--mu);
+  font-weight:400;font-size:11.5px;border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--bd2);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#FDFCFA}
+tbody tr.done{opacity:.62}
+td.id{color:var(--mu2);font-size:12px;width:38px}
+td.co{font-weight:500}
+td.pos{color:var(--tx)}
+td.meta{color:var(--mu);font-size:12px;white-space:nowrap}
+td.stall{white-space:nowrap;font-size:12px;color:var(--mu)}
+td.acts{white-space:nowrap;text-align:right}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;
+  white-space:nowrap;font-weight:500}
+select.st{font-size:11.5px;padding:3px 6px;border-radius:20px;font-weight:500;
+  border:1px solid transparent;cursor:pointer;max-width:96px}
+.stall.hot{color:var(--amber);font-weight:500}
+.stall.bad{color:var(--red);font-weight:500}
+.due{font-size:12px}
+.due.over{color:var(--red);font-weight:500}
+.due.soon{color:var(--amber);font-weight:500}
+.due.later{color:var(--mu)}
+.grp{background:#FAF9F6;border-bottom:1px solid var(--bd)}
+.grp td{padding:7px 10px;font-size:12px;color:var(--mu);font-weight:500}
+.empty{color:var(--mu);text-align:center;padding:44px 0;font-size:13px}
+.sec-title{font-size:13px;font-weight:500;color:var(--mu);margin:22px 0 8px;
+  display:flex;align-items:baseline;gap:10px}
+.sec-title .n{color:var(--mu2);font-weight:400}
+dialog{border:1px solid var(--bd);border-radius:12px;padding:0;max-width:520px;width:92%;
+  box-shadow:0 8px 40px rgba(0,0,0,.13);background:var(--card)}
+dialog::backdrop{background:rgba(44,44,42,.28)}
+dialog .dh{padding:14px 18px;border-bottom:1px solid var(--bd2);font-weight:500}
+dialog .db{padding:16px 18px;max-height:60vh;overflow:auto}
+dialog .df{padding:12px 18px;border-top:1px solid var(--bd2);text-align:right;
+  display:flex;gap:8px;justify-content:flex-end}
+dl.kv{margin:0;display:grid;grid-template-columns:88px 1fr;gap:5px 12px;font-size:13px}
+dl.kv dt{color:var(--mu2);font-size:12px}
+dl.kv dd{margin:0;word-break:break-all}
+.tl{margin:14px 0 0;padding:0;list-style:none;border-left:2px solid var(--bd2);
+  padding-left:13px}
+.tl li{font-size:12.5px;padding:4px 0;color:var(--mu)}
+.tl li b{color:var(--tx);font-weight:500}
+.notes{white-space:pre-wrap;background:#FAF9F6;border-radius:8px;padding:9px 11px;
+  font-size:12.5px;margin-top:6px;color:var(--tx)}
+@media(max-width:900px){
+  form.quick{grid-template-columns:1fr 1fr}
+  .stats{margin-left:0;width:100%}
+  td.meta,th.meta{display:none}
+  .wrap{padding:14px}
+}
+.viewtabs{display:flex;gap:6px;margin:0 0 14px}
+.viewtabs button{padding:7px 15px;border:1px solid var(--bd);background:var(--card);
+  border-radius:9px;cursor:pointer;font:inherit;font-size:13px;color:var(--mu)}
+.viewtabs button.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:500}
+.infobar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:13px}
+.infobar input[type=search]{flex:1;min-width:200px;max-width:430px}
+.igrp{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.igrp>h2{margin:0;padding:9px 13px;background:var(--gray-bg);font-size:13.5px;font-weight:500;
+  display:flex;justify-content:space-between;align-items:center;gap:10px}
+.igrp .ib{padding:4px 9px 9px}
+.irow{display:flex;gap:10px;padding:6px 3px;border-bottom:1px dashed var(--bd2)}
+.irow:last-child{border-bottom:none}
+.ilb{flex:0 0 132px;color:var(--mu);font-size:12.5px;padding-top:3px;word-break:break-all}
+.ivl{flex:1;min-width:0;white-space:pre-wrap;word-break:break-word;background:var(--gray-bg);
+  border:1px solid transparent;border-radius:7px;padding:6px 9px;cursor:pointer;font-size:13.5px}
+.ivl:hover{border-color:var(--red);background:#fff}
+.ivl.flash{background:var(--teal-bg);border-color:var(--teal)}
+.ivl .inote{display:block;color:var(--amber);font-size:11.5px;margin-top:4px}
+.irow.todo .ivl{background:var(--red-bg);color:var(--red)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);
+  background:#2C2C2A;color:#fff;padding:9px 16px;border-radius:9px;font-size:13px;
+  opacity:0;pointer-events:none;transition:.18s;z-index:99}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <h1>秋招投递记录</h1>
+      <div class="path" id="dbpath"></div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="viewtabs">
+    <button type="button" id="tabApps" class="on" onclick="switchView('apps')">投递记录</button>
+    <button type="button" id="tabInfo" onclick="switchView('info')">我的资料</button>
+  </div>
+
+  <div id="viewApps">
+
+  <div class="panel">
+    <h2>快速录入 —— 填完按回车即可，然后接着录下一家</h2>
+    <form class="quick" id="quick" autocomplete="off">
+      <div class="f"><label>公司 <span class="req">必填</span></label>
+        <input id="q_company" list="companylist" placeholder="腾讯" required></div>
+      <div class="f"><label>岗位 <span class="req">必填</span></label>
+        <input id="q_position" placeholder="后端开发" required></div>
+      <div class="f"><label>批次</label>
+        <input id="q_batch" list="batchlist" placeholder="提前批"></div>
+      <div class="f"><label>渠道</label>
+        <input id="q_channel" list="channellist" placeholder="官网"></div>
+      <div class="f"><label>城市</label><input id="q_city" placeholder="深圳"></div>
+      <div class="f"><label>投递日期</label><input id="q_applied_at" type="date"></div>
+      <div class="f"><label>当前状态</label>
+        <select id="q_status"></select></div>
+      <div class="f"><button type="submit" class="primary">录入</button></div>
+    </form>
+    <datalist id="companylist"></datalist>
+    <datalist id="batchlist"></datalist>
+    <datalist id="channellist"></datalist>
+    <div id="qhint"></div>
+    <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button type="button" class="sm" id="toggleBulk">批量粘贴录入</button>
+      <span style="font-size:12px;color:var(--mu2)">一次贴几十家时用它</span>
+    </div>
+    <div class="bulkwrap" id="bulkwrap" hidden>
+      <div class="infobox">一行一条，用 <b>|</b> 或 Tab 分隔（从 Excel 直接复制就是 Tab）。顺序：<br>
+        公司 | 岗位 | 批次 | 渠道 | 城市 | 投递日期 | 状态 | 下一步 | 下一步时间 | 备注<br>
+        只有公司、岗位必填，空列留空即可。日期支持 08-15 / 2026-08-15 / 20260815。</div>
+      <textarea id="bulktext" placeholder="腾讯 | 后端开发 | 提前批 | 官网 | 深圳 | 08-15
+字节跳动 | 数据科学 | 正式批 | 内推 | 北京 | 08-20 | 流程中 | 在线笔试 | 09-30
+美团 | 算法工程师 | 正式批 | 官网 | 北京"></textarea>
+      <div style="margin-top:9px;display:flex;gap:8px">
+        <button type="button" class="primary" id="doBulk">解析并录入</button>
+        <button type="button" id="clearBulk">清空</button>
+      </div>
+      <div id="bulkresult"></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input type="search" id="kw" placeholder="搜索公司 / 岗位 / 备注…">
+    <div class="chips" id="filterchips"></div>
+    <label style="margin-left:auto;font-size:12px;color:var(--mu);display:flex;gap:5px;align-items:center">
+      <input type="checkbox" id="showarch" style="width:auto"> 显示已放弃
+    </label>
+    <button class="sm" id="refresh">刷新</button>
+  </div>
+
+  <div class="panel alert" id="alertbox" hidden>
+    <h2 style="color:var(--amber)">快到期 / 已逾期</h2>
+    <ul id="alertlist"></ul>
+  </div>
+
+  <div id="listwrap"></div>
+
+  </div><!-- /viewApps -->
+
+  <div id="viewInfo" hidden>
+    <div class="infobar">
+      <input type="search" id="ikw" placeholder="搜索字段或内容，例如：单位性质 / SQL / 荣誉 / 实习 …">
+      <label style="font-size:12px;color:var(--mu);display:flex;gap:5px;align-items:center">
+        <input type="checkbox" id="ionlytodo" style="width:auto"> 只看待补
+      </label>
+      <span id="ihint" style="font-size:12px;color:var(--mu2)"></span>
+      <button class="sm" id="irefresh">刷新</button>
+    </div>
+    <div id="iwrap"></div>
+  </div>
+
+</div>
+
+<dialog id="dlg">
+  <div class="dh" id="dlgTitle">详情</div>
+  <div class="db" id="dlgBody"></div>
+  <div class="df">
+    <button class="link danger" id="dlgDel">删除这条</button>
+    <button id="dlgClose">关闭</button>
+  </div>
+</dialog>
+
+<script>
+const S = {
+  apps: [], meta: null, stats: null, filter: "", kw: "",
+  color: {
+    "流程中": ["#E6F1FB","#185FA5"],
+    "泡池子": ["#FAEEDA","#854F0B"],
+    "已挂":   ["#FCEBEB","#A32D2D"],
+    "已放弃": ["#F1EFE8","#888780"]
+  }
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+async function api(path, opt) {
+  const r = await fetch(path, Object.assign({headers:{"Content-Type":"application/json"}}, opt||{}));
+  const t = await r.text();
+  let d = null;
+  try { d = t ? JSON.parse(t) : null; } catch(e) { d = {error:t}; }
+  if (!r.ok) throw new Error((d && d.error) || ("HTTP " + r.status));
+  return d;
+}
+
+const LS = "qz.web.prefs";
+function prefs(load) {
+  if (load) { try { return JSON.parse(localStorage.getItem(LS)) || {}; } catch(e) { return {}; } }
+  const o = {};
+  ["q_batch","q_channel","q_city","q_status"].forEach(k => o[k] = $(k).value);
+  try { localStorage.setItem(LS, JSON.stringify(o)); } catch(e) {}
+}
+
+async function boot() {
+  const [meta, apps, stats, cos] = await Promise.all([
+    api("/api/meta"), api("/api/apps"), api("/api/stats"), api("/api/companies")
+  ]);
+  S.meta = meta; S.apps = apps; S.stats = stats;
+  $("dbpath").textContent = "数据文件：" + meta.db;
+
+  const today = meta.today;
+  $("q_applied_at").value = today;
+  $("q_status").innerHTML = meta.statuses
+    .map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("");
+  $("batchlist").innerHTML = meta.batches.map(b => `<option value="${esc(b)}">`).join("");
+  $("channellist").innerHTML = meta.channels.map(b => `<option value="${esc(b)}">`).join("");
+  $("companylist").innerHTML = cos.map(c => `<option value="${esc(c.company)}">`).join("");
+
+  const p = prefs(true);
+  ["q_batch","q_channel","q_city","q_status"].forEach(k => { if (p[k]) $(k).value = p[k]; });
+
+  renderStats(); renderChips(); renderList(); renderAlert();
+}
+
+function renderStats() {
+  const s = S.stats || {total:0, active:0};
+  const up = (s.upcoming || []).filter(u => u.days <= 3).length;
+  $("stats").innerHTML = `
+    <div class="stat"><b>${s.total}</b><span>已投</span></div>
+    <div class="stat"><b>${s.active}</b><span>进行中</span></div>
+    <div class="stat hi"><b>${up}</b><span>3 天内</span></div>
+    <div class="stat"><b>${(s.by_status||{})["流程中"]||0}</b><span>流程中</span></div>
+    <div class="stat hi"><b>${(s.by_status||{})["泡池子"]||0}</b><span>泡池子</span></div>
+    <div class="stat"><b>${(s.by_status||{})["已挂"]||0}</b><span>已挂</span></div>`;
+}
+
+function renderChips() {
+  const cnt = {};
+  S.apps.forEach(a => cnt[a.status] = (cnt[a.status]||0)+1);
+  const sts = (S.meta.statuses || []).filter(s => cnt[s]);
+  $("filterchips").innerHTML =
+    `<span class="chip${S.filter?"":" on"}" data-s="">全部 ${S.apps.length}</span>` +
+    sts.map(s => `<span class="chip${S.filter===s?" on":""}" data-s="${esc(s)}">${esc(s)} ${cnt[s]}</span>`).join("");
+  $("filterchips").querySelectorAll(".chip").forEach(el =>
+    el.onclick = () => { S.filter = el.dataset.s; renderChips(); renderList(); });
+}
+
+function filtered() {
+  const kw = S.kw.trim().toLowerCase();
+  return S.apps.filter(a => {
+    if (S.filter && a.status !== S.filter) return false;
+    if (!kw) return true;
+    return [a.company,a.position,a.batch,a.channel,a.city,a.notes]
+      .some(v => (v||"").toLowerCase().includes(kw));
+  });
+}
+
+function badge(st) {
+  const [bg, fg] = S.color[st] || ["#F1EFE8","#5F5E5A"];
+  return `<span class="badge" style="background:${bg};color:${fg}">${esc(st)}</span>`;
+}
+
+function stallCell(a) {
+  if (a.stall_days == null && a.age_days == null) return "";
+  let h = "";
+  if (a.stall_days != null) {
+    const d = a.stall_days;
+    const cls = d >= 21 ? "bad" : (d >= 14 ? "hot" : "");
+    h += `<span class="stall ${cls}">卡 ${d} 天</span>`;
+  }
+  if (a.age_days != null && a.age_days > 0) {
+    h += `<div style="font-size:11px;color:var(--mu2)">投递 ${a.age_days} 天</div>`;
+  }
+  return h;
+}
+
+function dueCell(a) {
+  if (a.due_days == null || !a.next_action_at) return "";
+  const d = a.due_days;
+  const cls = d < 0 ? "over" : (d <= 2 ? "soon" : "later");
+  const t = d < 0 ? `逾期 ${-d} 天` : (d === 0 ? "今天" : `${d} 天后`);
+  return `<div class="due ${cls}">${esc(t)}</div>
+          <div style="font-size:11.5px;color:var(--mu2)">${esc(a.next_action_at)}</div>`;
+}
+
+function rowHtml(a) {
+  const [bg, fg] = S.color[a.status] || ["#F1EFE8","#5F5E5A"];
+  const opts = S.meta.statuses.map(s =>
+    `<option value="${esc(s)}"${s===a.status?" selected":""}>${esc(s)}</option>`).join("");
+  const metaParts = [a.batch, a.channel, a.city].filter(Boolean).join(" · ");
+  return `<tr class="${a.is_terminal?"done":""}" data-id="${a.id}">
+    <td class="id">${a.id}</td>
+    <td class="co">${esc(a.company)}${a.department?"<div style='font-size:11.5px;color:var(--mu2)'>"+esc(a.department)+"</div>":""}</td>
+    <td class="pos">${esc(a.position)}</td>
+    <td><select class="st" style="background:${bg};color:${fg}" data-act="st">${opts}</select></td>
+    <td class="stall">${stallCell(a)||"<span style='color:var(--mu2)'>—</span>"}</td>
+    <td class="meta">${esc(metaParts)}</td>
+    <td>${a.next_action ? esc(a.next_action) + (a.next_action_at ? dueCell(a) : "") : ""}</td>
+    <td class="acts">
+      <button class="link" data-act="note">备注</button>
+      ${a.site_url ? `<button class="link" data-act="portal">招聘系统</button>` : ""}
+      <button class="link" data-act="detail">详情</button>
+    </td>
+  </tr>`;
+}
+
+function renderList() {
+  const rows = filtered();
+  if (!rows.length) {
+    $("listwrap").innerHTML = `<div class="empty">还没有记录。用上面的表单录一条试试。</div>`;
+    return;
+  }
+  const groups = {};
+  rows.forEach(a => (groups[a.status] = groups[a.status] || []).push(a));
+  const order = S.meta.flow.filter(s => groups[s])
+    .concat(S.meta.statuses.filter(s => groups[s] && !S.meta.flow.includes(s)));
+  const open = order.filter(s => !S.meta.terminal.includes(s));
+  const done = order.filter(s => S.meta.terminal.includes(s));
+
+  let html = "";
+  if (open.length) {
+    html += `<table><thead><tr><th>#</th><th>公司</th><th>岗位</th><th>状态</th>
+      <th>停滞</th><th class="meta">批次/渠道/城市</th><th>下一步</th><th></th></tr></thead><tbody>`;
+    open.forEach(s => {
+      // 组内按卡住天数降序，最久没动静的排最前 —— 与命令行 qz ls 口径一致
+      const items = groups[s].slice().sort((x, y) => (y.stall_days || 0) - (x.stall_days || 0));
+      html += `<tr class="grp"><td colspan="8">${esc(s)} · ${groups[s].length} 家</td></tr>`;
+      items.forEach(a => html += rowHtml(a));
+    });
+    html += `</tbody></table>`;
+  }
+  if (done.length) {
+    html += `<div class="sec-title">已结束 <span class="n">${done.reduce((n,s)=>n+groups[s].length,0)} 条</span></div>`;
+    html += `<table><thead><tr><th>#</th><th>公司</th><th>岗位</th><th>状态</th>
+      <th>停滞</th><th class="meta">批次/渠道/城市</th><th>下一步</th><th></th></tr></thead><tbody>`;
+    done.forEach(s => groups[s].forEach(a => html += rowHtml(a)));
+    html += `</tbody></table>`;
+  }
+  $("listwrap").innerHTML = html;
+}
+
+function renderAlert() {
+  const up = (S.stats.upcoming || []).filter(u => u.days <= 7);
+  if (!up.length) { $("alertbox").hidden = true; return; }
+  $("alertbox").hidden = false;
+  $("alertlist").innerHTML = up.map(u => {
+    const cls = u.days < 0 ? "over" : (u.days <= 2 ? "soon" : "later");
+    const t = u.days < 0 ? `逾期 ${-u.days} 天`
+            : (u.days === 0 ? "今天" : (u.days === 1 ? "明天" : `${u.days} 天后`));
+    return `<li><span class="tag ${cls}">${t}</span>
+      <span><b>${esc(u.company)}</b> <span class="co">· ${esc(u.position)}</span> ——
+      ${esc(u.action || "待办")} <span class="co">(${esc(u.at)})</span></span></li>`;
+  }).join("");
+}
+
+async function reload() {
+  [S.apps, S.stats] = await Promise.all([api("/api/apps"), api("/api/stats")]);
+  const cos = await api("/api/companies");
+  $("companylist").innerHTML = cos.map(c => `<option value="${esc(c.company)}">`).join("");
+  renderStats(); renderChips(); renderList(); renderAlert();
+}
+
+/* ---------- 快速录入 ---------- */
+$("quick").addEventListener("submit", async e => {
+  e.preventDefault();
+  const body = {
+    company: $("q_company").value.trim(),
+    position: $("q_position").value.trim(),
+    batch: $("q_batch").value.trim(),
+    channel: $("q_channel").value.trim(),
+    city: $("q_city").value.trim(),
+    applied_at: $("q_applied_at").value,
+    status: $("q_status").value
+  };
+  if (!body.company || !body.position) return;
+  const btn = $("quick").querySelector("button[type=submit]");
+  btn.disabled = true;
+  try {
+    const r = await api("/api/apps", {method:"POST", body: JSON.stringify(body)});
+    prefs(false);
+    $("q_company").value = ""; $("q_position").value = "";
+    $("q_company").focus();
+    $("qhint").innerHTML = r.created
+      ? `<div class="okbox">已录入 #${r.id} ${esc(body.company)} · ${esc(body.position)}。接着录下一家。</div>`
+      : `<div class="warnbox">#${r.id} ${esc(body.company)} · ${esc(body.position)} 之前已录过，已补充更新（没有重复）。</div>`;
+    await reload();
+  } catch(err) { $("qhint").innerHTML = `<div class="warnbox">录入失败：${esc(err.message)}</div>`; }
+  btn.disabled = false;
+});
+
+/* 公司名输入时提示是否投过 */
+let coTimer = null;
+$("q_company").addEventListener("input", e => {
+  clearTimeout(coTimer);
+  const v = e.target.value.trim();
+  if (!v) { $("qhint").innerHTML = ""; return; }
+  coTimer = setTimeout(async () => {
+    try {
+      const r = await api("/api/check", {method:"POST",
+        body: JSON.stringify({company:v, position:$("q_position").value.trim(),
+                              batch:$("q_batch").value.trim()})});
+      if (r.duplicate) {
+        $("qhint").innerHTML = `<div class="warnbox">这家同一岗位已经录过（#${r.duplicate.id}，
+          当前 ${esc(r.duplicate.status)}），再提交会当作补充更新。</div>`;
+      } else if (r.same_company && r.same_company.length) {
+        const lst = r.same_company.map(x => `${esc(x.position)}（${esc(x.status)}）`).join("、");
+        $("qhint").innerHTML = `<div class="infobox">投过这家：${lst}。确认是新岗位再提交。</div>`;
+      } else if (!v) { $("qhint").innerHTML = ""; }
+      else { $("qhint").innerHTML = ""; }
+    } catch(err) {}
+  }, 260);
+});
+
+/* ---------- 批量 ---------- */
+$("toggleBulk").onclick = () => {
+  const w = $("bulkwrap");
+  w.hidden = !w.hidden;
+  if (!w.hidden) $("bulktext").focus();
+};
+$("clearBulk").onclick = () => { $("bulktext").value = ""; $("bulkresult").innerHTML = ""; };
+$("doBulk").onclick = async () => {
+  const lines = $("bulktext").value.split(/\r?\n/);
+  if (!lines.filter(l => l.trim()).length) return;
+  try {
+    const r = await api("/api/apps", {method:"POST", body: JSON.stringify({lines})});
+    let h = `<div class="okbox">新增 ${r.created} 条，补充更新 ${r.updated} 条` +
+            (r.failed ? `，跳过 ${r.failed} 条` : "") + `。</div>`;
+    if (r.problems && r.problems.length) {
+      h += `<div class="warnbox">` + r.problems.slice(0,8).map(p =>
+        `第 ${p.line} 行：${esc(p.why)}`).join("<br>") +
+        (r.problems.length > 8 ? `<br>…还有 ${r.problems.length-8} 条` : "") + `</div>`;
+    }
+    $("bulkresult").innerHTML = h;
+    $("bulktext").value = "";
+    await reload();
+  } catch(err) { $("bulkresult").innerHTML = `<div class="warnbox">${esc(err.message)}</div>`; }
+};
+
+/* ---------- 列表操作 ---------- */
+$("listwrap").addEventListener("change", async e => {
+  const sel = e.target.closest("select[data-act=st]");
+  if (!sel) return;
+  const id = +sel.closest("tr").dataset.id;
+  sel.disabled = true;
+  try { await api(`/api/apps/${id}`, {method:"PUT", body: JSON.stringify({status: sel.value})});
+        await reload(); }
+  catch(err) { alert("改状态失败：" + err.message); sel.disabled = false; }
+});
+
+$("listwrap").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-act]");
+  if (!b) return;
+  const tr = b.closest("tr");
+  const id = +tr.dataset.id;
+  const act = b.dataset.act;
+  const a = S.apps.find(x => x.id === id);
+  if (!a) return;
+
+  if (act === "portal") {
+    window.open(a.site_url, "_blank");
+  } else if (act === "note") {
+    const t = prompt(`给 #${id} ${a.company} · ${a.position} 加备注：`);
+    if (t && t.trim()) {
+      await api(`/api/apps/${id}/note`, {method:"POST", body: JSON.stringify({text:t.trim()})});
+      await reload();
+    }
+  } else if (act === "detail") {
+    showDetail(id);
+  }
+});
+
+async function showDetail(id) {
+  const a = await api("/api/apps/" + id);
+  $("dlgTitle").textContent = `#${a.id} ${a.company} · ${a.position}`;
+  const kv = [
+    ["部门", a.department], ["批次", a.batch], ["渠道", a.channel], ["城市", a.city],
+    ["内推人", a.referrer], ["投递日期", a.applied_at],
+    ["当前状态", a.status + (a.status_at ? `（自 ${a.status_at}）` : "")],
+    ["停滞", a.stall_days != null ? a.stall_days + " 天" : ""],
+    ["投递至今", a.age_days != null ? a.age_days + " 天" : ""],
+    ["下一步", a.next_action], ["下一步时间", a.next_action_at],
+    ["直达链接", a.portal_url],
+    ["招聘系统", a.site_url && a.site_url !== a.portal_url ? a.site_url : ""],
+    ["JD 链接", a.jd_url]
+  ].filter(x => x[1]);
+
+  let h = `<dl class="kv">` + kv.map(([k,v]) =>
+    `<dt>${esc(k)}</dt><dd>${/链接|入口|系统/.test(k)
+      ? `<a href="${esc(v)}" target="_blank" rel="noreferrer">${esc(v)}</a>` : esc(v)}</dd>`
+  ).join("") + `</dl>`;
+
+  if (a.notes) h += `<div style="margin-top:14px;font-size:12px;color:var(--mu2)">备注</div>
+    <div class="notes">${esc(a.notes)}</div>`;
+
+  if (a.events && a.events.length) {
+    h += `<div style="margin-top:16px;font-size:12px;color:var(--mu2)">流程时间线</div>
+      <ul class="tl">` + a.events.map(ev => {
+        const head = ev.kind === "状态推进"
+          ? `<b>${esc(ev.from_status)} → ${esc(ev.to_status)}</b>`
+          : `<b>${esc(ev.kind)}</b>`;
+        return `<li>${esc(ev.at)} ${head}${ev.note ? " · " + esc(ev.note) : ""}</li>`;
+      }).join("") + `</ul>`;
+  }
+  $("dlgBody").innerHTML = h;
+  $("dlgDel").onclick = async () => {
+    if (!confirm(`确定删除 #${a.id} ${a.company} · ${a.position}？\n这条的流程流水也会一起删掉，无法恢复。`)) return;
+    await api("/api/apps/" + a.id, {method:"DELETE"});
+    $("dlg").close();
+    await reload();
+  };
+  $("dlg").showModal();
+}
+$("dlgClose").onclick = () => $("dlg").close();
+
+/* ---------- 工具栏 ---------- */
+let kwTimer = null;
+$("kw").addEventListener("input", e => {
+  clearTimeout(kwTimer);
+  kwTimer = setTimeout(() => { S.kw = e.target.value; renderList(); }, 160);
+});
+$("showarch").onchange = async e => {
+  const q = e.target.checked ? "" : "?archived=0";
+  S.apps = await api("/api/apps" + q);
+  renderChips(); renderList();
+};
+$("refresh").onclick = () => reload();
+
+/* ---------------- 我的资料（详细简历字段） ---------------- */
+let INFO = null;
+
+function switchView(v) {
+  const isApps = (v === 'apps');
+  document.getElementById('viewApps').hidden = !isApps;
+  document.getElementById('viewInfo').hidden = isApps;
+  document.getElementById('tabApps').classList.toggle('on', isApps);
+  document.getElementById('tabInfo').classList.toggle('on', !isApps);
+  if (!isApps && !INFO) loadInfo();
+}
+
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+function fallbackCopy(t) {
+  try {
+    const a = document.createElement('textarea');
+    a.value = t;
+    a.style.position = 'fixed';
+    a.style.left = '-9999px';
+    document.body.appendChild(a);
+    a.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(a);
+    return ok;
+  } catch (e) { return false; }
+}
+
+function copyText(t) {
+  return new Promise(res => {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(t).then(() => res(true), () => res(fallbackCopy(t)));
+    } else { res(fallbackCopy(t)); }
+  });
+}
+
+function toast(msg) {
+  let el = document.getElementById('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('on'), 1300);
+}
+
+async function loadInfo() {
+  const wrap = document.getElementById('iwrap');
+  wrap.innerHTML = '<div class="panel">载入中…</div>';
+  try {
+    INFO = await api('/api/profile');
+  } catch (e) {
+    wrap.innerHTML = '<div class="panel">载入失败，请点右上角刷新重试。</div>';
+    return;
+  }
+  renderInfo();
+}
+
+function findItem(id) {
+  for (const g of (INFO || [])) {
+    for (const it of g.items) { if (it.id === id) return it; }
+  }
+  return null;
+}
+
+function renderInfo() {
+  const kw = (document.getElementById('ikw').value || '').trim().toLowerCase();
+  const onlyTodo = document.getElementById('ionlytodo').checked;
+  const wrap = document.getElementById('iwrap');
+  let total = 0, todoN = 0, shown = 0;
+  const boxes = [];
+
+  (INFO || []).forEach(g => {
+    const keep = [];
+    g.items.forEach(it => {
+      total++;
+      if (it.todo) todoN++;
+      if (onlyTodo && !it.todo) return;
+      const hay = (it.label + ' ' + (it.value || '') + ' ' + (it.note || '')).toLowerCase();
+      if (kw && hay.indexOf(kw) === -1) return;
+      shown++;
+      keep.push(it);
+    });
+    if (!keep.length) return;
+    const rows = keep.map(it => `
+      <div class="irow ${it.todo ? 'todo' : ''}">
+        <div class="ilb">${escHtml(it.label)}${it.todo ? ' ⚠' : ''}</div>
+        <div class="ivl" data-id="${it.id}" title="单击复制 · 双击修改">${it.value ? escHtml(it.value) : '【待补】'}${it.note ? `<span class="inote">↳ ${escHtml(it.note)}</span>` : ''}</div>
+      </div>`).join('');
+    boxes.push(`<div class="igrp"><h2><span>${escHtml(g.grp)}</span>
+      <span style="color:var(--mu2);font-weight:400;font-size:12px">${keep.length} 项</span></h2>
+      <div class="ib">${rows}</div></div>`);
+  });
+
+  wrap.innerHTML = boxes.join('') || '<div class="panel">没有匹配的字段。</div>';
+
+  document.getElementById('ihint').textContent =
+    `共 ${total} 项，其中 ${todoN} 项待补` +
+    (shown !== total ? `（当前显示 ${shown} 项）` : '') +
+    ' · 单击复制，双击修改';
+
+  wrap.querySelectorAll('.ivl').forEach(el => {
+    el.addEventListener('click', async () => {
+      const it = findItem(+el.getAttribute('data-id'));
+      if (!it) return;
+      if (!it.value) { toast('此项待补，双击可填入内容'); return; }
+      const ok = await copyText(it.value);
+      toast(ok ? '已复制：' + it.label : '复制失败，请手动选中');
+      if (ok) {
+        el.classList.add('flash');
+        setTimeout(() => el.classList.remove('flash'), 480);
+      }
+    });
+    el.addEventListener('dblclick', async () => {
+      const it = findItem(+el.getAttribute('data-id'));
+      if (!it) return;
+      const v = prompt('修改「' + it.label + '」的内容：', it.value || '');
+      if (v === null) return;
+      try {
+        const r = await api('/api/profile/' + it.id, {
+          method: 'PUT',
+          body: JSON.stringify({ value: v })
+        });
+        if (r && r.id !== undefined) {
+          it.value = r.value;
+          it.todo = !!r.todo;
+          renderInfo();
+          toast('已保存');
+        } else { toast('保存失败'); }
+      } catch (e) { toast('保存失败：' + e.message); }
+    });
+  });
+}
+
+document.getElementById('ikw').addEventListener('input', renderInfo);
+document.getElementById('ionlytodo').addEventListener('change', renderInfo);
+document.getElementById('irefresh').addEventListener('click', loadInfo);
+if (location.hash === '#info') { switchView('info'); }
+
+boot().catch(err => {
+  document.body.insertAdjacentHTML("afterbegin",
+    `<div style="background:#FCEBEB;color:#A32D2D;padding:10px 14px;font-size:13px">
+       加载失败：${esc(err.message)}</div>`);
+});
+</script>
+</body>
+</html>

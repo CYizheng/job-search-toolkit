@@ -1,0 +1,27 @@
+# ---- 本地私有数据，绝不入库 ----
+**/mail.json
+*.bak_*
+
+# ---- 数据库：默认忽略，只放行示例库 ----
+*.db
+!ledger/data/qiuzhao.db
+
+# ---- 真实录音与逐字稿 ----
+recordings/
+logs/
+transcript.json
+transcript.md
+analysis_report.md
+
+# ---- Python ----
+__pycache__/
+*.py[co]
+.venv/
+venv/
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

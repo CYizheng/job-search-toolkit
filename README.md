@@ -4,7 +4,7 @@
 
 | 子项目 | 是什么 | 技术栈 | 在线演示 |
 |---|---|---|---|
-| [`mock-interview/`](mock-interview/) | 模拟面试引擎：题库驱动、链式追问、纯录音 + 自动体检 | 原生 JS + HTML/CSS，**零依赖** | [打开](https://USERNAME.github.io/job-search-toolkit/mock-interview/) |
+| [`mock-interview/`](mock-interview/) | 模拟面试引擎：题库驱动、链式追问、纯录音 + 自动体检 | 原生 JS + HTML/CSS，**零依赖** | [打开](https://CYizheng.github.io/job-search-toolkit/mock-interview/) |
 | [`ledger/`](ledger/) | 投递台账：命令行 + 本地网页看板，SQLite 单文件存储 | Python **纯标准库**（无 pip 依赖） | —（本地运行，见下） |
 
 ---

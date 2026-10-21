@@ -25,3 +25,7 @@ venv/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# 本地测试产物
+*_live.html
+local_*.html
